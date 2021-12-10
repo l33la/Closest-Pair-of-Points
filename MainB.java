@@ -35,19 +35,36 @@ public class MainB {
         ArrayList<Point> sortedY = new ArrayList<>(points);
         sortedY.sort(Comparator.comparing(Point::getY));
 
-        System.out.println("" + getDistance(points.get(0), points.get(3)));
-
         // Initial call to closestPoints method
         //closestPoints(sortedX, sortedY, N);
     }
 
-    public static void closestPoints(ArrayList<Point> X, ArrayList<Point> Y, int N) {
+    public static double closestPoints(ArrayList<Point> X, ArrayList<Point> Y) {
+        if(X.size() == 2)
+            return getDistance(X.get(0), X.get(1));
+        else if(X.size() == 3) {
+            ArrayList<Double> distances = new ArrayList<>();
+            distances.add(getDistance(X.get(0), X.get(1)));
+            distances.add(getDistance(X.get(0), X.get(2)));
+            distances.add(getDistance(X.get(1), X.get(2)));
+            return getMinimum(distances);
+        }
+
 
     }
 
     public static double getDistance(Point a, Point b) {
         double distance = Math.sqrt((b.getX() - a.getX()) * (b.getX() - a.getX()) + (b.getY() - a.getY()) * (b.getY() - a.getY()));
         return Math.round(distance * 1000000.0) / 1000000.0;
+    }
+
+    public static double getMinimum(ArrayList<Double> distances) {
+        double min = distances.get(0);
+        for(int i = 1; i < distances.size(); i++)
+            if(distances.get(i) < min)
+                min = distances.get(i);
+
+        return min;
     }
 
     public static ArrayList<Point> toPoints(ArrayList<String> input, int N) {
