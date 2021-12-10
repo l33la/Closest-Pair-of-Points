@@ -1,6 +1,5 @@
 import java.io.*;
-import java.util.Scanner;
-import java.util.ArrayList;
+import java.util.*;
 import java.awt.Point;
 
 public class MainB {
@@ -30,12 +29,25 @@ public class MainB {
 
     public static void problem_2(ArrayList<String> input, int N) {
         ArrayList<Point> points = toPoints(input, N);
-        // sorted points by X and Y and pass to closestPoints()
-        // call closestPoints() here
+
+        ArrayList<Point> sortedX = new ArrayList<>(points);
+        sortedX.sort(Comparator.comparing(Point::getX));
+        ArrayList<Point> sortedY = new ArrayList<>(points);
+        sortedY.sort(Comparator.comparing(Point::getY));
+
+        System.out.println("" + getDistance(points.get(0), points.get(3)));
+
+        // Initial call to closestPoints method
+        //closestPoints(sortedX, sortedY, N);
     }
 
-    public static void closestPoints(ArrayList<Point> X, ArrayList<Point> Y) {
+    public static void closestPoints(ArrayList<Point> X, ArrayList<Point> Y, int N) {
 
+    }
+
+    public static double getDistance(Point a, Point b) {
+        double distance = Math.sqrt((b.getX() - a.getX()) * (b.getX() - a.getX()) + (b.getY() - a.getY()) * (b.getY() - a.getY()));
+        return Math.round(distance * 1000000.0) / 1000000.0;
     }
 
     public static ArrayList<Point> toPoints(ArrayList<String> input, int N) {
