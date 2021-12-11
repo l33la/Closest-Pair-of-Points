@@ -36,48 +36,37 @@ public class MainB {
         sortedY.sort(Comparator.comparing(Point::getY));
 
         // Initial call to closestPoints method
-        closestPoints(sortedX, sortedY, 0, N - 1);
+        System.out.println(closestPoints(sortedX, sortedY, 0, N - 1));
     }
 
     // Printing should be here to also print Point indices
     public static double closestPoints(ArrayList<Point> X, ArrayList<Point> Y, int lower, int upper) {
-        if(X.size() == 2) {
-            double min = getDistance(X.get(0), X.get(1));
-            System.out.println("Base case 1 distance: " + min);
-            return min;
-        }
+        int size = upper - lower + 1;
+        if(size == 2) 
+            return getDistance(X.get(0), X.get(1));
 
-        else if(X.size() == 3) {
+        else if(size == 3) {
             double dist1 = getDistance(X.get(0), X.get(1));
             double dist2 = getDistance(X.get(0), X.get(2));
             double dist3 = getDistance(X.get(1), X.get(2));
             double min = getMinimum(dist1, dist2);
             min = getMinimum(min, dist3);
-            System.out.println("Base case 2 distance: " + min);
             return min;
         }
         
-        int mid = lower + (upper - lower) / 2; // Video says X[n/2]??
-        System.out.println("\nLower: " + lower + "\nUpper: " + upper + "\nMiddle: " + mid);
-        ArrayList<Point> leftPart = new ArrayList<>(X.subList(lower, mid));
-        ArrayList<Point> rightPart = new ArrayList<>(X.subList(mid + 1, X.size() - 1));
+        int mid = lower + (upper - lower) / 2;
 
-        double leftDist = closestPoints(leftPart, Y, lower, mid);
-        double rightDist = closestPoints(rightPart, Y, mid + 1, upper);
+        double leftDist = closestPoints(X, Y, lower, mid);
+        double rightDist = closestPoints(X, Y, mid + 1, upper);
         double minDist = getMinimum(leftDist, rightDist);
 
-        System.out.println("Mid point: " + X.get(mid).getX() + " " + X.get(mid).getY());
-
         ArrayList<Point> S = getStrip(X, Y, minDist, mid);
-        displayPoints(S, S.size());
 
-        for(int i = 0; i < S.size(); i++) // Doesn't work; out of bounds
-            for(int j = 0; j < 7; j++)
-                minDist = getMinimum(minDist, getDistance(S.get(i), S.get(i + j)));
+        for (int i = 0; i<S.size(); i++)
+            for(int j = i + 1; j < S.size() && (S.get(j).getY() - S.get(i).getY() < minDist); j++)
+                minDist = getMinimum(minDist, getDistance(S.get(i), S.get(j)));
 
-        System.out.println("Min distance test: " + minDist);
         return minDist;
-
     }
 
     public static ArrayList<Point> getStrip(ArrayList<Point> X, ArrayList<Point> Y, double min, int mid) {
@@ -87,10 +76,8 @@ public class MainB {
         for(int i = 0; i < Y.size(); i++) {
             Point curr = Y.get(i);
 
-            if(curr.getX() > midX - min && curr.getX() < midX + min){
+            if(curr.getX() > midX - min && curr.getX() < midX + min)
                 S.add(curr);
-                System.out.println("\n" + curr.getX() + " > " + midX + " - " + min + " && " + curr.getX() + " < " + midX + " + " + min);
-            }
         }
 
         return S;
